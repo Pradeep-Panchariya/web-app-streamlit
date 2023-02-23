@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import requests
-import os
+import os, json
 
 ##title with color and emoji
 #emoji : https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
@@ -28,8 +28,11 @@ headers = {"apikey": secret}
 
 response = requests.request("GET", url, headers=headers, data=payload)
 
-if response.status_code != 200:
-    print("Some Error Occured")
-else:
+try:
+    if response.status_code != 200:
+        print("Some Error Occured")
     result = response.text
-    st.text(result)
+    result = json.loads(result)
+    st.text(result['AU'])
+except Exception as e:
+    print(e)
