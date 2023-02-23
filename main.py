@@ -33,6 +33,13 @@ try:
         print("Some Error Occured")
     result = response.text
     result = json.loads(result)
-    st.text(result['AU'])
+    country_code_dic= {}
+    for code in result:
+        country_code_dic[result[code]['country_name']] = result[code]['dialling_code']
+        
+        
+    select_country = st.selectbox('Select Country Name',country_code_dic.keys())
+    st.write("You Country Code :", country_code_dic[select_country])
+    print('hi')
 except Exception as e:
     print(e)
