@@ -40,6 +40,6 @@ try:
         
     select_country = st.selectbox('Select Country Name',country_code_dic.keys())
     st.write("You Country Code :", country_code_dic[select_country])
+    print('hi')
 except Exception as e:
-    st.write(e)
-
+    print(e)
