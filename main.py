@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 import requests
 import os, json
+import traceback
 
 ##title with color and emoji
 #emoji : https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
@@ -35,7 +36,7 @@ def  get_country_code():
     headers = {"apikey": secret_country}
     
     try:
-         response = requests.request("GET", url, headers=headers, data=payload)
+        response = requests.request("GET", url, headers=headers, data=payload)
         result = response.text
         result = json.loads(result)
         country_code_dic= {}
@@ -46,7 +47,7 @@ def  get_country_code():
         select_country = st.selectbox('Select Country Name',country_code_dic.keys())
         st.write("You Country Code :", country_code_dic[select_country])
     except Exception as e:
-        st.text(e)
+        st.error(traceback.format_exc())
 
 #Calling the country function
 get_country_code()
@@ -66,28 +67,63 @@ def get_symbol_exchange_rate():
     }
 
     try:
-        response = requests.request("GET", url, headers=headers, data = payload)
+        response = requests.request("GET", get_symbol_url, headers=headers, data = payload)
         response = json.loads(response.text)
         return response
     except Exception as e:
-        st.write(e)
+        st.error(traceback.format_exc())
     
-def get_exchange_rate(from_currency, to_currency, amount):
+def get_exchange_rate():
 
     
     get_symbol_url = url = "https://api.apilayer.com/exchangerates_data/convert"
     exchange_secret_key = os.environ["EXCHANGE_SECRET_KEY"]
+
+    currency_symbol = get_symbol_exchange_rate()['symbols']
+    symbol_lst = []
+    for currency_code, currency_name in currency_symbol.items():
+        symbol_lst.append(currency_code +" : " +currency_name)
+
+    from_currency_dropdown = st.selectbox("From : ",symbol_lst)
+    to_currency_dropdown = st.selectbox("To : ",symbol_lst)
+    amount = st.text_input("Enter Amount :",1)
+# Convert the input to an integer and handle errors
+    try:
+        amount_input = int(amount)
+    except ValueError:
+        st.warning("Please enter an integer value")
+
+    submit_button = st.button("Submit")  
     payload = {
-        "to" : to,
-        "from" : from,
-        "amount": amount
+        "to" : to_currency_dropdown.split(':')[0].strip(),
+        "from" : from_currency_dropdown.split(':')[0].strip(),
+        "amount": amount_input
     }
     headers= {
-      "apikey": exchange_secret_ley
+      "apikey": exchange_secret_key
     }
     
-    response = requests.request("GET", url, headers=headers, data = payload)
-    
-    status_code = response.status_code
-    result = response.text
-    
+    try:
+        response = requests.get(url, headers=headers, params = (payload))
+        response = json.loads(response.text)
+
+        if submit_button:
+          
+            answer_dict={}
+            st.write(response)
+            answer_dict['Date'] = response['date']
+            answer_dict['From'] = response['query']["from"]
+            answer_dict['To'] = response['query']['to']
+            answer_dict['Amount'] = response['query']['amount']
+            answer_dict['Rate'] = response['info']['rate']
+            answer_dict['Result'] = response['result']
+            df = pd.Series(answer_dict)
+            st.text("Exchange Result : ⬇️")
+            st.write(df,)
+            
+            
+        
+    except Exception as e:
+        st.error(traceback.format_exc())
+
+get_exchange_rate()
