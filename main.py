@@ -21,7 +21,7 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-st.title(":green[Hello, Greetings, let's engage in the creation of intriguing things.] :smile:")
+st.title(":green[Hello, let's engage in the creation of intriguing things.] :smile:")
 
 #---------------------------
 
