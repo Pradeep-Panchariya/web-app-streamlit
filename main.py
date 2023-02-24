@@ -7,7 +7,7 @@ import traceback
 
 ##title with color and emoji
 #emoji : https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
-st.title(":green[Hello, Let's build something interesting stuff] :smile:")
+st.title(":green[Hello, Let's build some interesting stuff] :smile:")
 
 #---------------------------
 
@@ -16,7 +16,7 @@ st.markdown(
     """
     <style>
     body {
-        background-color: #FFFF00;
+        background-color: #00FF00;
     }
     </style>
     """,
@@ -25,7 +25,7 @@ st.markdown(
 
 ################################
 
-st.text("-"*70)
+st.text("♥️"*70)
 st.subheader("1. Get the Country Code")
 
 ###Get the country code
@@ -45,13 +45,13 @@ def  get_country_code():
             
             
         select_country = st.selectbox('Select Country Name',country_code_dic.keys())
-        st.write("You Country Code :", country_code_dic[select_country])
+        st.write(f"{select_country} Country Code : <b>{country_code_dic[select_country]}</b>",unsafe_allow_html=True)
     except Exception as e:
         st.error(traceback.format_exc())
 
 #Calling the country function
 get_country_code()
-st.text("-"*70)
+st.text("♥️"*70)
 
 st.subheader("2. Get the Exchange Rate")
 ## get the exchange rate of currency
@@ -88,10 +88,13 @@ def get_exchange_rate():
     to_currency_dropdown = st.selectbox("To : ",symbol_lst)
     amount = st.text_input("Enter Amount :",1)
 # Convert the input to an integer and handle errors
+    amount_input = 1
     try:
         amount_input = int(amount)
     except ValueError:
         st.warning("Please enter an integer value")
+    except Exception as e:
+        st.error(traceback.format_exc())
 
     submit_button = st.button("Submit")  
     payload = {
@@ -108,19 +111,19 @@ def get_exchange_rate():
         response = json.loads(response.text)
 
         if submit_button:
-          
-            answer_dict={}
-            st.write(response)
-            answer_dict['Date'] = response['date']
-            answer_dict['From'] = response['query']["from"]
-            answer_dict['To'] = response['query']['to']
-            answer_dict['Amount'] = response['query']['amount']
-            answer_dict['Rate'] = response['info']['rate']
-            answer_dict['Result'] = response['result']
-            df = pd.Series(answer_dict)
-            st.text("Exchange Result : ⬇️")
-            st.write(df,)
             
+            indx =['Date','From','To','Amount','Rate','Result']
+            result_lst = []
+            result_lst.append(response['date'])
+            result_lst.append(response['query']["from"])
+            result_lst.append(response['query']['to'])
+            result_lst.append(response['query']['amount'])
+            result_lst.append(f"{response['info']['rate']:.2f}")
+            result_lst.append(f"{response['result']:.2f}")
+            df = pd.DataFrame(data = [result_lst],columns=indx,index=['Output'])
+            st.write("Exchange Result : ⬇️")
+            st.write(df)
+            st.text('♥️'*70)
             
         
     except Exception as e:
