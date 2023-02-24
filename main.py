@@ -19,13 +19,6 @@ st.markdown(f"""
                 animation: mymove 5s infinite;">
         {text}
     </div>
-    <style>
-        @keyframes mymove {{
-            0% {{top: 0px; left: 0px;}}
-            50% {{top: 200px; left: 200px;}}
-            100% {{top: 0px; left: 0px;}}
-        }}
-    </style>
 """, unsafe_allow_html=True)
 
 st.title(":green[Hello, Greetings, let's engage in the creation of intriguing things.] :smile:")
