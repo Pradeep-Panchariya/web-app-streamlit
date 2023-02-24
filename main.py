@@ -34,11 +34,8 @@ def  get_country_code():
     payload = {}
     headers = {"apikey": secret_country}
     
-    response = requests.request("GET", url, headers=headers, data=payload)
-    
     try:
-        if response.status_code != 200:
-            print("Some Error Occured")
+         response = requests.request("GET", url, headers=headers, data=payload)
         result = response.text
         result = json.loads(result)
         country_code_dic= {}
@@ -57,12 +54,34 @@ st.text("-"*70)
 
 st.subheader("2. Get the Exchange Rate")
 ## get the exchange rate of currency
-get_exchange_rat
-def get_exchange_rate(from_currency, to_currency, amount):
+
+def get_symbol_exchange_rate():
 
     get_symbol_url = "https://api.apilayer.com/exchangerates_data/symbols"
-    exchange_secret_ley = os.environ["EXCHANGE_SECRET_KEY"]
+    
+    exchange_secret_key = os.environ["EXCHANGE_SECRET_KEY"]
     payload = {}
+    headers= {
+      "apikey": exchange_secret_key
+    }
+
+    try:
+        response = requests.request("GET", url, headers=headers, data = payload)
+        response = json.loads(response.text)
+        return response
+    except Exception as e:
+        st.write(e)
+    
+def get_exchange_rate(from_currency, to_currency, amount):
+
+    
+    get_symbol_url = url = "https://api.apilayer.com/exchangerates_data/convert"
+    exchange_secret_key = os.environ["EXCHANGE_SECRET_KEY"]
+    payload = {
+        "to" : to,
+        "from" : from,
+        "amount": amount
+    }
     headers= {
       "apikey": exchange_secret_ley
     }
