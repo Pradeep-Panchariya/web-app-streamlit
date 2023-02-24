@@ -7,7 +7,28 @@ import traceback
 
 ##title with color and emoji
 #emoji : https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
-st.title(":green[Hello, Let's build some interesting stuff] :smile:")
+import streamlit as st
+
+# Define the text you want to animate
+text = 'Pradeep Panchariya'
+
+# Use HTML and CSS to create the animation
+st.markdown(f"""
+    <div style="font-size: 20px;
+                color: #ff6699;
+                animation: mymove 5s infinite;">
+        {text}
+    </div>
+    <style>
+        @keyframes mymove {{
+            0% {{top: 0px; left: 0px;}}
+            50% {{top: 200px; left: 200px;}}
+            100% {{top: 0px; left: 0px;}}
+        }}
+    </style>
+""", unsafe_allow_html=True)
+
+st.title(":green[Hello, Greetings, let's engage in the creation of intriguing things.] :smile:")
 
 #---------------------------
 
