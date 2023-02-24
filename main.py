@@ -22,9 +22,9 @@ st.write('You selected:', selected_value)
 ###Get the country code
 
 url = "https://api.apilayer.com/number_verification/countries"
-secret = os.environ['WEATHER_API_KEY']
+secret_country = os.environ['COUNTRY_API_KEY']
 payload = {}
-headers = {"apikey": secret}
+headers = {"apikey": secret_country}
 
 response = requests.request("GET", url, headers=headers, data=payload)
 
